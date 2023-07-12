@@ -1,24 +1,17 @@
-const Joi = require("joi");
 
 const contacts = require ("../models/contacts")
 
 const { HttpError, ctrlWrapper } = require("../helpers")
 
-const addSchema = Joi.object({
-    name: Joi.string().required(),
-    email: Joi.string().required(),
-    phone: Joi.string().required(),
-})
-  
 
-const getAll = async (req, res, next) => {
+const getAll = async (req, res) => {
     
     const result = await contacts.listContacts();
     res.json(result);
     
 }
 
-const getById = async (req, res, next) => {
+const getById = async (req, res) => {
     
       const { contactId } = req.params;
       const result = await contacts.getContactById(contactId);
@@ -29,12 +22,9 @@ const getById = async (req, res, next) => {
     
 }
   
-const add = async (req, res, next) => {
+const add = async (req, res) => {
     
-      const { error } = addSchema.validate(req.body);
-      if (error) {
-        throw HttpError(400, error.message);
-      }
+    
       const result = await contacts.addContact(req.body);
       res.status(201).json(result);
     
@@ -42,7 +32,7 @@ const add = async (req, res, next) => {
 }
   
 
-const remove = async (req, res, next) => {
+const remove = async (req, res) => {
     
       const { contactId } = req.params;
       const result = await contacts.removeContact(contactId);
@@ -57,12 +47,9 @@ const remove = async (req, res, next) => {
     res.json({ message: 'template message' })
 }
   
-const update = async (req, res, next) => {
+const update = async (req, res) => {
     
-      const { error } = addSchema.validate(req.body);
-      if (error) {
-        throw HttpError(400, error.message);
-      }
+      
       const { contactId } = req.params;
       const result = await contacts.updateContactById(contactId, req.body);
       if (!result) {
